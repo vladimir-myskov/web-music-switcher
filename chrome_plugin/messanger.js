@@ -1,6 +1,7 @@
 (function(global) {
   var server = "http://192.168.1.4:8888",
-    ws = new WebSocket("ws://192.168.1.4:8888/websocket");
+    ws = new SockJS("http://192.168.1.4:8888/websocket");
+    console.log("boo");
 
   var Messanger = function(connection) {
       var callbacks = {},
@@ -23,6 +24,7 @@
 
       // dispatch to the right handlers
       connection.onmessage = function(evt) {
+        console.log(evt);
         var json = JSON.parse(evt.data)
         dispatch(json.event, json.data)
       };

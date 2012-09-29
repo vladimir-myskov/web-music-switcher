@@ -1,6 +1,6 @@
 (function(global) {
   var server = "http://192.168.1.4:8888",
-    ws = new WebSocket("ws://192.168.1.4:8888/websocket");
+    ws = new SockJS("http://192.168.1.4:8888/websocket");
 
   var Messanger = function(connection) {
       var callbacks = {},

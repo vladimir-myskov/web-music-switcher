@@ -6,7 +6,7 @@
     {
       "matches": ["http://vk.com/audio*"],
       "css": ["mystyle.css"],
-      "js": ["messanger.js","vk_api.js"]
+      "js": ["sockjs-0.3.min.js","messanger.js","vk_api.js"]
     }
   ],
   "browser_action": {

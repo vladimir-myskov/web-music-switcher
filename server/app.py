@@ -3,6 +3,7 @@ import json
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
+from sockjs.tornado import SockJSRouter, SockJSConnection
 
 pages = {}
 
@@ -25,12 +26,13 @@ class SeniorHandler(tornado.web.RequestHandler):
         self.render("senior.html")
 
 
-class AudioPageHandler(tornado.websocket.WebSocketHandler):
+class AudioPageHandler(SockJSConnection):
     def open(self):
         print "OPEN"
         pass
 
     def on_message(self, message):
+        print message
         message = json.loads(message)
         method, data = "on_"+ message["event"], message["data"]
         try:
@@ -68,12 +70,16 @@ settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static")
 }
 
+AudioPageRouter = SockJSRouter(AudioPageHandler, '/websocket')
+
 application = tornado.web.Application([
     (r"/pages", PagesHandler),
-    (r"/websocket",AudioPageHandler),
+    #(r"/websocket",AudioPageHandler),
     (r"/senior",SeniorHandler),
-],debug=True, **settings)
+  ]+AudioPageRouter.urls,
+  debug=True, **settings)
 
 if __name__ == "__main__":
+
     application.listen(8888)
     tornado.ioloop.IOLoop.instance().start()
