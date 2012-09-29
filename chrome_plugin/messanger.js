@@ -1,7 +1,7 @@
 (function(global) {
   var server = "http://192.168.1.4:8888",
     ws = new SockJS("http://192.168.1.4:8888/websocket");
-    console.log("boo");
+    console.log(global);
 
   var Messanger = function(connection) {
       var callbacks = {},
@@ -25,11 +25,12 @@
       // dispatch to the right handlers
       connection.onmessage = function(evt) {
         console.log(evt);
-        var json = JSON.parse(evt.data)
-        dispatch(json.event, json.data)
+        var json = evt.data;
+        dispatch(json.event, json.data);
       };
 
       var dispatch = function(event_name, message) {
+        console.log([event_name, message]);
           var chain = callbacks[event_name];
           if (typeof chain == 'undefined') return; // no callbacks for this event
           for (var i = 0; i < chain.length; i++) {
@@ -38,6 +39,7 @@
         }
     };
   var messanger = new Messanger(ws);
+  console.log(messanger);
   global.messanger = messanger;
 
   ws.onopen = function() {

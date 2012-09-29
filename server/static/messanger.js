@@ -23,7 +23,7 @@
 
       // dispatch to the right handlers
       connection.onmessage = function(evt) {
-        var json = JSON.parse(evt.data)
+        var json = evt.data;
         dispatch(json.event, json.data)
       };
 

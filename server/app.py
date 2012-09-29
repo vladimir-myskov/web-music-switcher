@@ -53,18 +53,18 @@ class AudioPageHandler(SockJSConnection):
             self.page[key] = value
 
     def on_senior_prev(self, data):
-        for page in pages.values():
-            page["handler"].write_message({
+        self.broadcast([page["handler"] for page in pages.values()], {
                 "event":"audio_prev",
                 "data": {}
-            })
+            }
+        )
 
     def on_senior_next(self, data):
-        for page in pages.values():
-            page["handler"].write_message({
+        self.broadcast([page["handler"] for page in pages.values()], {
                 "event":"audio_next",
                 "data": {}
-            })
+            }
+        )
 
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static")
