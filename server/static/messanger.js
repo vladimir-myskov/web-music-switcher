@@ -38,10 +38,10 @@
   var messanger = new Messanger(ws);
   global.messanger = messanger;
 
-  ws.onopen = function() {
+  /*ws.onopen = function() {
     global.uniqKey = new Date().getTime();
     messanger.send("register", {
       "key": global.uniqKey
     })
-  }
+  }*/
 })(window);

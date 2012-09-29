@@ -43,9 +43,28 @@
   global.messanger = messanger;
 
   ws.onopen = function() {
-    global.uniqKey = new Date().getTime();
-    messanger.send("register", {
-      "key": global.uniqKey
-    })
+    chrome.storage.sync.get("default_key", function(data){
+      global.uniqKey = data.default_key || new Date().getTime()
+      messanger.send("register", {
+        "key": global.uniqKey
+      });
+    });
   }
+
+  global.apiInitializer = {}
+  var hostToInitializer = {
+    "music.yandex.ru":"yandex",
+    "vk.com":"vkontakte",
+    "www.youtube.com":"youtube"
+  }
+
+  window.addEventListener("load",function(){
+    console.log("load");
+
+    var ii = hostToInitializer[window.location.host];
+    console.log(ii);
+    global.apiInitializer[ii]();
+  });
+
+
 })(window);

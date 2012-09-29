@@ -22,8 +22,8 @@ class PagesHandler(tornado.web.RequestHandler):
         self.write(str(pages))
 
 class SeniorHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.render("senior.html")
+    def get(self, key):
+        self.render("senior.html",  key=key)
 
 
 class AudioPageHandler(SockJSConnection):
@@ -53,18 +53,16 @@ class AudioPageHandler(SockJSConnection):
             self.page[key] = value
 
     def on_senior_prev(self, data):
-        self.broadcast([page["handler"] for page in pages.values()], {
+        pages[data["key"]]["handler"].send({
                 "event":"audio_prev",
                 "data": {}
-            }
-        )
+            })
 
     def on_senior_next(self, data):
-        self.broadcast([page["handler"] for page in pages.values()], {
+        pages[data["key"]]["handler"].send({
                 "event":"audio_next",
                 "data": {}
-            }
-        )
+            })
 
 settings = {
     "static_path": os.path.join(os.path.dirname(__file__), "static")
@@ -75,7 +73,7 @@ AudioPageRouter = SockJSRouter(AudioPageHandler, '/websocket')
 application = tornado.web.Application([
     (r"/pages", PagesHandler),
     #(r"/websocket",AudioPageHandler),
-    (r"/senior",SeniorHandler),
+    (r"/senior/(.*)",SeniorHandler),
   ]+AudioPageRouter.urls,
   debug=True, **settings)
 
