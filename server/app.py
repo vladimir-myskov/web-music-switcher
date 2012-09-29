@@ -7,7 +7,7 @@ import tornado.websocket
 pages = {}
 
 def register_audio_page(key, page, handler):
-    if not key in devices:
+    if not key in pages:
         page["handler"] = handler
         pages[key] = page
     return page
@@ -19,6 +19,11 @@ def unregister_audio_page(key):
 class PagesHandler(tornado.web.RequestHandler):
     def get(self):
         self.write(str(pages))
+
+class SeniorHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.render("senior.html")
+
 
 class AudioPageHandler(tornado.websocket.WebSocketHandler):
     def open(self):
@@ -37,6 +42,7 @@ class AudioPageHandler(tornado.websocket.WebSocketHandler):
         unregister_audio_page(self.page["key"])
 
     def on_register(self, data):
+        print data
         key = data["key"]
         self.page = register_audio_page(key, data, self)
 
@@ -44,11 +50,29 @@ class AudioPageHandler(tornado.websocket.WebSocketHandler):
         for key,value in data.iteritems():
             self.page[key] = value
 
+    def on_senior_prev(self, data):
+        for page in pages.values():
+            page["handler"].write_message({
+                "event":"audio_prev",
+                "data": {}
+            })
+
+    def on_senior_next(self, data):
+        for page in pages.values():
+            page["handler"].write_message({
+                "event":"audio_next",
+                "data": {}
+            })
+
+settings = {
+    "static_path": os.path.join(os.path.dirname(__file__), "static")
+}
 
 application = tornado.web.Application([
-    (r"/devices", PagesHandler),
+    (r"/pages", PagesHandler),
     (r"/websocket",AudioPageHandler),
-],debug=True)
+    (r"/senior",SeniorHandler),
+],debug=True, **settings)
 
 if __name__ == "__main__":
     application.listen(8888)

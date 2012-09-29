@@ -1,0 +1,24 @@
+#next_button {
+  display:inline-block;
+  cursor: pointer;
+  width:200px;
+  height:40px;
+  line-height:40px;
+  vertical-align:middle;
+  text-align:center;
+  color: red;
+  background-color:lightblue;
+  font-size:20px;
+}
+
+#prev_button {
+  display:inline-block;
+  cursor: pointer;
+  width:200px;
+  height:40px;
+  line-height:40px;
+  text-align:center;
+  color: red;
+  background-color:lightgreen;
+  font-size:20px;
+}

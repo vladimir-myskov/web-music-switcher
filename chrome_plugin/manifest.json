@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "content_scripts": [
     {
-      "matches": ["http://vk.com/audio"],
+      "matches": ["http://vk.com/audio*"],
       "css": ["mystyle.css"],
       "js": ["messanger.js","vk_api.js"]
     }
@@ -15,6 +15,6 @@
   },
   "permissions": [
     "tabs",
-    "http://vk.com/audio"
+    "http://vk.com/audio*"
   ]
 }
