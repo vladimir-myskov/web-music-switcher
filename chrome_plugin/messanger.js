@@ -58,13 +58,16 @@
     "www.youtube.com":"youtube"
   }
 
-  window.addEventListener("load",function(){
+  var initApi = function(){
     console.log("load");
 
     var ii = hostToInitializer[window.location.host];
     console.log(ii);
     global.apiInitializer[ii]();
-  });
+  }
 
+  setTimeout(function(){
+    initApi();
+  },1000);
 
 })(window);
